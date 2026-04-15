@@ -111,3 +111,49 @@ def show():
                 Preventive health truly saves money!
                 </div>
                 """, unsafe_allow_html=True)
+                
+
+    with tab2:
+        st.markdown("#### 💰 Preventive vs Reactive Healthcare Cost Calculator")
+        st.caption("See how much you save by investing in prevention now.")
+
+        c1, c2 = st.columns(2)
+        gym_monthly   = c1.number_input("Monthly Gym / Fitness (PKR)", 0, 10000, 2500)
+        nutrition_monthly = c2.number_input("Extra Healthy Food Budget (PKR)", 0, 10000, 2000)
+        checkup_yearly = c1.number_input("Annual Preventive Check-up (PKR)", 0, 30000, 5000)
+
+        # Estimated reactive costs for common conditions
+        conditions_cost = {
+            "Type 2 Diabetes (lifetime management)": 600000,
+            "Hypertension + Cardiac (10-yr treatment)": 800000,
+            "Obesity-related surgery": 400000,
+            "Cancer treatment (early detection)": 1200000,
+        }
+
+        prevention_annual = gym_monthly * 12 + nutrition_monthly * 12 + checkup_yearly
+        st.markdown(f"**Your Annual Prevention Investment: PKR {prevention_annual:,}**")
+        st.markdown("#### Preventive vs Reactive Cost Comparison:")
+
+        labels = list(conditions_cost.keys())
+        reactive = list(conditions_cost.values())
+        preventive = [prevention_annual * 10] * len(labels)  # 10-year comparison
+
+        fig = go.Figure()
+        fig.add_trace(go.Bar(name="Reactive Treatment", x=labels, y=reactive, marker_color="#ef5350"))
+        fig.add_trace(go.Bar(name="10-Year Prevention", x=labels, y=preventive, marker_color="#66bb6a"))
+        fig.update_layout(barmode="group", height=320, plot_bgcolor="#fafcff", paper_bgcolor="rgba(0,0,0,0)",
+                          margin=dict(l=10, r=10, t=10, b=10),
+                          yaxis=dict(title="PKR", tickformat=","),
+                          legend=dict(orientation="h", yanchor="bottom", y=1.02))
+        st.plotly_chart(fig, use_container_width=True)
+
+        best_case_saving = min(reactive) - prevention_annual * 10
+        if best_case_saving > 0:
+            st.markdown(f"""
+            <div class="alert-green">
+            💚 <b>Potential Savings:</b> By investing PKR {prevention_annual:,}/year in preventive health, 
+            you could save up to <b>PKR {best_case_saving:,}</b> over 10 years compared to treating 
+            diabetes alone. Prevention pays!
+            </div>
+            """, unsafe_allow_html=True)
+    
