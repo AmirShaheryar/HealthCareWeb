@@ -157,3 +157,27 @@ def show():
             </div>
             """, unsafe_allow_html=True)
     
+    with tab3:
+        st.markdown("#### 🌍 Pakistan Health & Wealth Insights")
+        cities = ["Lahore", "Karachi", "Islamabad", "Peshawar", "Multan", "Quetta"]
+        obesity = [28, 31, 22, 19, 25, 18]
+        diabetes_prev = [26, 30, 21, 18, 24, 17]
+        avg_income = [65000, 72000, 85000, 48000, 52000, 42000]
+
+        fig = go.Figure()
+        fig.add_trace(go.Bar(name="Obesity Rate (%)", x=cities, y=obesity, marker_color="#ef9a9a"))
+        fig.add_trace(go.Bar(name="Diabetes Prevalence (%)", x=cities, y=diabetes_prev, marker_color="#80cbc4"))
+        fig.add_trace(go.Scatter(name="Avg Monthly Income (PKR÷1000)", x=cities,
+                                  y=[i/1000 for i in avg_income],
+                                  mode="lines+markers", line=dict(color="#5c6bc0", width=3),
+                                  yaxis="y2"))
+        fig.update_layout(
+            barmode="group", height=320,
+            yaxis=dict(title="Rate (%)"),
+            yaxis2=dict(title="Income (PKR ÷ 1000)", overlaying="y", side="right"),
+            plot_bgcolor="#fafcff", paper_bgcolor="rgba(0,0,0,0)",
+            margin=dict(l=10, r=10, t=10, b=10),
+            legend=dict(orientation="h", yanchor="bottom", y=1.02)
+        )
+        st.plotly_chart(fig, use_container_width=True)
+        st.caption("Source: Simulated data for demonstration. Real implementation uses NHMS / WHO Pakistan datasets.")
