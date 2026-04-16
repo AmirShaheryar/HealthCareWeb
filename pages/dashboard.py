@@ -54,3 +54,28 @@ def show():
         ))
         fig2.update_layout(height=220, margin=dict(l=10, r=10, t=20, b=10), paper_bgcolor="rgba(0,0,0,0)")
         st.plotly_chart(fig2, use_container_width=True)
+    
+    st.divider()
+
+    st.markdown("#### ➕ Log Today's Health Metrics")
+    with st.form("health_log_form"):
+        c1, c2, c3, c4 = st.columns(4)
+        hr  = c1.number_input("Heart Rate (bpm)", 40, 200, 72)
+        sys = c2.number_input("Systolic BP",       80, 200, 120)
+        dia = c3.number_input("Diastolic BP",      50, 130, 80)
+        stp = c4.number_input("Steps", 0, 50000, 6000)
+        notes = st.text_input("Any notes / symptoms today?", placeholder="e.g. mild headache")
+        if st.form_submit_button("💾 Save Log"):
+            entry = {
+                "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
+                "hr": hr, "systolic": sys, "diastolic": dia,
+                "steps": stp, "notes": notes
+            }
+            st.session_state.health_logs.append(entry)
+            st.success("✅ Health log saved!")
+
+    if st.session_state.health_logs:
+        st.markdown("#### 📋 Recent Logs")
+        import pandas as pd
+        df = pd.DataFrame(st.session_state.health_logs[-5:])
+        st.dataframe(df, use_container_width=True)
