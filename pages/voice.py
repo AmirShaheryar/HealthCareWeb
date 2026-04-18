@@ -93,3 +93,25 @@ def show():
                 st.session_state["voice_transcript"] = manual_text
                 st.session_state["soap_ready"] = True
                 st.rerun()
+        with tab2:
+        st.markdown("### 📋 SOAP Note Generator")
+        st.caption("Converts clinical text into a structured SOAP note.")
+
+        if "soap_ready" in st.session_state and st.session_state.soap_ready:
+            transcript = st.session_state.get("voice_transcript", "")
+        else:
+            transcript = st.text_area("Paste clinical transcript:", height=130,
+                                       placeholder="Patient is a 60-year-old male reporting shortness of breath...",
+                                       key="soap_input")
+
+        if st.button("🧠 Generate SOAP Note", key="gen_soap") or st.session_state.get("soap_ready"):
+            if transcript:
+                st.session_state["soap_ready"] = False
+                soap = generate_soap(transcript)
+                st.markdown("#### 🗒️ Generated SOAP Note")
+                st.markdown(f'<div class="soap">{soap}</div>', unsafe_allow_html=True)
+                st.download_button("⬇️ Download SOAP Note (.txt)", data=soap.replace("<br>","").replace("<b>","").replace("</b>",""),
+                                   file_name="soap_note.txt", mime="text/plain")
+            else:
+                st.warning("Please enter a transcript first.")
+    
