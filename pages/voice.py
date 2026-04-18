@@ -115,3 +115,49 @@ def show():
             else:
                 st.warning("Please enter a transcript first.")
     
+def generate_soap(text):
+    """Simple SOAP note generator using keyword extraction."""
+    import re
+    from datetime import datetime
+    
+    text_lower = text.lower()
+
+    # Extract age/gender
+    age_match = re.search(r'(\d+)[- ]year[s]?[- ]old', text_lower)
+    gender_match = re.search(r'\b(male|female|man|woman|boy|girl)\b', text_lower)
+    age = age_match.group(1) if age_match else "Unknown"
+    gender = gender_match.group(1).capitalize() if gender_match else "Unknown"
+
+    # Subjective: extract complaints
+    complaint_keywords = ["reports", "complains", "feels", "experiencing", "describes", "noted", "states", "says"]
+    subjective_lines = []
+    for sentence in text.split('.'):
+        if any(kw in sentence.lower() for kw in complaint_keywords):
+            subjective_lines.append(sentence.strip())
+    subjective = " ".join(subjective_lines[:3]) if subjective_lines else text[:200]
+
+    # Objective: extract vitals/measurements
+    vitals = []
+    bp_match  = re.search(r'blood pressure[^\d]*(\d+)[/ ](\d+)', text_lower)
+    gluc_match= re.search(r'(blood glucose|glucose|sugar)[^\d]*(\d+)', text_lower)
+    temp_match= re.search(r'temperature[^\d]*([\d.]+)', text_lower)
+    if bp_match:   vitals.append(f"BP: {bp_match.group(1)}/{bp_match.group(2)} mmHg")
+    if gluc_match: vitals.append(f"Blood Glucose: {gluc_match.group(2)} mg/dL")
+    if temp_match: vitals.append(f"Temperature: {temp_match.group(1)}°C")
+    objective = ", ".join(vitals) if vitals else "Vitals not explicitly mentioned in transcript."
+
+    # Assessment: detect conditions
+    conditions = []
+    cond_map = {
+        "diabetes": "Type 2 Diabetes Mellitus",
+        "hypertension": "Hypertension", 
+        "blood pressure": "Possible Hypertension",
+        "chest pain": "Chest Pain — rule out Angina/ACS",
+        "shortness of breath": "Dyspnea — assess for cardiac/pulmonary cause",
+        "depression": "Major Depressive Disorder",
+        "fever": "Pyrexia", 
+        "infection": "Possible Infection",
+        "fatigue": "Fatigue — assess for anaemia/thyroid",
+        "headache": "Cephalgia", 
+        "cough": "Productive/non-productive cough",
+    }
