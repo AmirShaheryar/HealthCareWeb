@@ -90,3 +90,19 @@ def show():
         else:
             st.markdown('<div class="alert-green">✅ No pending verifications.</div>',
                         unsafe_allow_html=True)
+        if verified_docs:
+            st.markdown(f"##### ✅ Verified Doctors ({len(verified_docs)})")
+            for email, doc in verified_docs.items():
+                with st.expander(f"✅  {doc['name']}  —  {doc.get('specialty','N/A')}  —  {doc.get('hospital','N/A')}"):
+                    col1,col2,col3 = st.columns(3)
+                    col1.markdown(f"**🪪 Licence:** {doc.get('licence_no','N/A')}")
+                    col2.markdown(f"**✅ Verified by:** {doc.get('verified_by','N/A')}")
+                    col3.markdown(f"**📅 Verified at:** {doc.get('verified_at','N/A')}")
+                    if doc.get("admin_note"):
+                        st.markdown(f"**📝 Note:** {doc['admin_note']}")
+
+                    if st.button(f"🔄 Revoke Verification", key=f"revoke_{email}"):
+                        st.session_state.users_db[email]["verified"] = False
+                        st.warning(f"Verification revoked for Dr. {doc['name']}.")
+                        st.rerun()
+
