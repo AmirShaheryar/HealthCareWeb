@@ -1,5 +1,6 @@
 import streamlit as st
 import plotly.graph_objects as go
+from datetime import datetime
 
 def show():
     if st.session_state.user_role != "Admin":
@@ -7,87 +8,85 @@ def show():
         return
 
     st.markdown('<p class="section-title">⚙️ Admin Control Panel</p>', unsafe_allow_html=True)
+    st.markdown(f"Welcome, **{st.session_state.username}**. Manage users, verify doctors, and control permissions.")
 
-    tab1, tab2, tab3 = st.tabs(["👥 User Management", "📊 System Analytics", "🔐 Permissions"])
+    db = st.session_state.users_db
 
-    with tab1:
-        st.markdown("#### Registered Users")
-        db = st.session_state.users_db
+    # ── Summary metrics ────────────────────────────────────────────────────────
+    total     = len(db)
+    doctors   = [e for e,u in db.items() if u["role"]=="Doctor"]
+    pending   = [e for e in doctors if not db[e].get("verified")]
+    users     = [e for e,u in db.items() if u["role"]=="User"]
 
-        for email, info in db.items():
-            role_badge = {"User": "🟢", "Doctor": "🔵", "Admin": "🔴"}.get(info["role"], "⚪")
-            verified_badge = "✅ Verified" if info.get("verified") else "⏳ Pending"
-            with st.expander(f"{role_badge} **{info['name']}** ({email}) — {info['role']} — {verified_badge}"):
-                col1, col2, col3 = st.columns(3)
-                col1.markdown(f"**Role:** {info['role']}")
-                col2.markdown(f"**Status:** {verified_badge}")
+    col1,col2,col3,col4 = st.columns(4)
+    col1.metric("👥 Total Users",      total)
+    col2.metric("🩺 Doctors",          len(doctors))
+    col3.metric("⏳ Pending Verification", len(pending),
+                delta=f"{len(pending)} need action" if pending else None,
+                delta_color="inverse")
+    col4.metric("👤 Patients",         len(users))
 
-                if not info.get("verified") and info["role"] == "Doctor":
-                    if col3.button(f"✅ Verify Doctor", key=f"ver_{email}"):
-                        st.session_state.users_db[email]["verified"] = True
-                        st.success(f"Doctor {info['name']} verified!")
-                        st.rerun()
-
-                new_role = col1.selectbox("Change Role", ["User", "Doctor", "Admin"],
-                                           index=["User", "Doctor", "Admin"].index(info["role"]),
-                                           key=f"role_{email}")
-                if col2.button("💾 Update Role", key=f"upd_{email}"):
-                    if email != "admin@demo.com":  # protect main admin
-                        st.session_state.users_db[email]["role"] = new_role
-                        st.success(f"Role updated for {info['name']}")
-                        st.rerun()
-                    else:
-                        st.warning("Cannot change primary admin role.")
-
-                if col3.button("🗑️ Remove User", key=f"del_{email}"):
-                    if email != "admin@demo.com":
-                        del st.session_state.users_db[email]
-                        st.success(f"User {info['name']} removed.")
-                        st.rerun()
-                    else:
-                        st.warning("Cannot delete the admin account.")
-
-    with tab2:
-        st.markdown("#### System Usage Analytics")
-        col1, col2, col3, col4 = st.columns(4)
-        col1.metric("Total Users", len(st.session_state.users_db))
-        col2.metric("Doctors", sum(1 for u in st.session_state.users_db.values() if u["role"] == "Doctor"))
-        col3.metric("Chat Sessions", len(st.session_state.chat_history) // 2)
-        col4.metric("Health Logs", len(st.session_state.health_logs))
-
-        # Simulated usage bar chart
-        features = ["Dashboard", "Chatbot", "Symptom DB", "Report Simplifier", "Genetic AQI", "Nutrition", "Predictions"]
-        usage = [145, 98, 112, 67, 45, 88, 73]
-        fig = go.Figure(go.Bar(x=features, y=usage,
-                                marker_color=["#2c5364","#43a047","#1e88e5","#fb8c00","#e53935","#8e24aa","#00acc1"]))
-        fig.update_layout(title="Feature Usage (Simulated)", height=300,
-                          plot_bgcolor="#fafcff", paper_bgcolor="rgba(0,0,0,0)",
-                          margin=dict(l=10, r=10, t=40, b=10))
-        st.plotly_chart(fig, use_container_width=True)
-
-    with tab3:
-        st.markdown("#### 🔐 System Permission Settings")
-        st.markdown("""
-        <div class="alert-blue">
-        Configure which roles can access which features.
+    if pending:
+        st.markdown(f"""
+        <div class="alert-amber">
+        ⚠️ <b>{len(pending)} doctor(s)</b> are awaiting licence verification.
+        Review them in the <b>Doctor Verification</b> tab below.
         </div>
         """, unsafe_allow_html=True)
 
-        permissions = {
-            "View Dashboard":       {"User": True,  "Doctor": True,  "Admin": True},
-            "AI Disease Prediction":{"User": True,  "Doctor": True,  "Admin": True},
-            "Report Simplifier":    {"User": True,  "Doctor": True,  "Admin": True},
-            "Genetic AQI Alerts":   {"User": True,  "Doctor": False, "Admin": True},
-            "Doctor Panel":         {"User": False, "Doctor": True,  "Admin": True},
-            "Admin Panel":          {"User": False, "Doctor": False, "Admin": True},
-            "Delete Users":         {"User": False, "Doctor": False, "Admin": True},
-        }
+    st.divider()
 
-        for feature, roles in permissions.items():
-            cols = st.columns([3, 1, 1, 1])
-            cols[0].markdown(f"**{feature}**")
-            for i, (role, allowed) in enumerate(roles.items()):
-                icon = "✅" if allowed else "❌"
-                cols[i+1].markdown(f"{icon} {role}")
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "⏳ Doctor Verification",
+        "👥 User Management",
+        "📊 Analytics",
+        "🔐 Permissions"
+    ])
 
-        st.caption("Permission matrix is for display. Full RBAC implementation uses database-backed policy engine.")
+    with tab1:
+        st.markdown("#### 🩺 Doctor Licence Verification")
+
+        pending_docs   = {e:db[e] for e in doctors if not db[e].get("verified")}
+        verified_docs  = {e:db[e] for e in doctors if db[e].get("verified")}
+
+        # ── Pending ────────────────────────────────────────────────────────────
+        if pending_docs:
+            st.markdown(f"##### ⏳ Pending ({len(pending_docs)})")
+            for email, doc in pending_docs.items():
+                with st.expander(f"⏳  {doc['name']}  —  {doc.get('specialty','N/A')}  —  {email}"):
+                    col1, col2, col3 = st.columns(3)
+                    col1.markdown(f"**👤 Name:** {doc['name']}")
+                    col2.markdown(f"**📧 Email:** {email}")
+                    col3.markdown(f"**🔬 Specialty:** {doc.get('specialty','N/A')}")
+                    col1.markdown(f"**🏥 Hospital:** {doc.get('hospital','N/A')}")
+                    col2.markdown(f"**🪪 Licence No:** {doc.get('licence_no','N/A')}")
+                    col3.markdown(f"**📅 Applied:** {doc.get('created_at','N/A')}")
+                    if doc.get("education"):
+                        st.markdown(f"**🎓 Education:** {doc['education']}")
+
+                    st.markdown("")
+                    admin_note = st.text_input("Admin Note (optional):",
+                                               placeholder="e.g. Licence verified via PMDC portal",
+                                               key=f"note_{email}")
+                    c1, c2, c3 = st.columns(3)
+
+                    if c1.button("✅ Approve", key=f"approve_{email}", use_container_width=True):
+                        st.session_state.users_db[email]["verified"]       = True
+                        st.session_state.users_db[email]["verified_by"]    = st.session_state.username
+                        st.session_state.users_db[email]["verified_at"]    = datetime.now().strftime("%Y-%m-%d %H:%M")
+                        st.session_state.users_db[email]["admin_note"]     = admin_note
+                        st.success(f"✅ Dr. {doc['name']} has been approved.")
+                        st.rerun()
+
+                    if c2.button("❌ Reject", key=f"reject_{email}", use_container_width=True):
+                        st.session_state.users_db[email]["verified"]    = False
+                        st.session_state.users_db[email]["rejected"]    = True
+                        st.session_state.users_db[email]["admin_note"]  = admin_note
+                        st.warning(f"Dr. {doc['name']} application rejected.")
+                        st.rerun()
+
+                    if c3.button("🔎 Request More Info", key=f"info_{email}", use_container_width=True):
+                        st.info(f"Info request sent to {email}.")
+        else:
+            st.markdown('<div class="alert-green">✅ No pending verifications.</div>',
+                        unsafe_allow_html=True)
