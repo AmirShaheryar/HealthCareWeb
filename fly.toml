@@ -1,0 +1,23 @@
+app = "nlp-medora"          # change to any unique name you like
+primary_region = "iad"       # pick the region closest to you, e.g. "sin", "lhr", "fra"
+
+[build]
+
+[env]
+  PORT = "8501"
+
+[[mounts]]
+  source = "medora_data"      # persistent volume name
+  destination = "/data"        # matches MEDORA_DB_PATH in Dockerfile
+
+[http_service]
+  internal_port = 8501
+  force_https = true
+  auto_stop_machines = "off"   # keep it running instead of sleeping (avoids cold-start delay)
+  auto_start_machines = true
+  min_machines_running = 1
+
+[[vm]]
+  memory = "1gb"
+  cpu_kind = "shared"
+  cpus = 1

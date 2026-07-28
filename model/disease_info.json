@@ -1,0 +1,207 @@
+{
+  "Fungal infection": {
+    "urgency": "Low",
+    "advice": "Antifungal cream or oral medication. Keep affected area dry.",
+    "icon": "\ud83c\udf44"
+  },
+  "Allergy": {
+    "urgency": "Low",
+    "advice": "Antihistamines. Identify and avoid triggers.",
+    "icon": "\ud83e\udd27"
+  },
+  "GERD": {
+    "urgency": "Medium",
+    "advice": "Avoid spicy/fatty food. Antacids. Elevate head while sleeping.",
+    "icon": "\ud83d\udd25"
+  },
+  "Chronic cholestasis": {
+    "urgency": "High",
+    "advice": "Consult gastroenterologist. Liver function tests required.",
+    "icon": "\ud83e\udec0"
+  },
+  "Drug Reaction": {
+    "urgency": "High",
+    "advice": "Stop suspected medication immediately. Seek medical attention.",
+    "icon": "\ud83d\udc8a"
+  },
+  "Peptic ulcer disease": {
+    "urgency": "Medium",
+    "advice": "Avoid NSAIDs. PPI medication. Test for H. pylori.",
+    "icon": "\ud83e\ude7a"
+  },
+  "AIDS": {
+    "urgency": "High",
+    "advice": "Immediate referral to infectious disease specialist. ART therapy.",
+    "icon": "\ud83d\udd34"
+  },
+  "Diabetes": {
+    "urgency": "Medium",
+    "advice": "Monitor blood sugar. Low GI diet. Metformin if prescribed.",
+    "icon": "\ud83e\ude78"
+  },
+  "Gastroenteritis": {
+    "urgency": "Medium",
+    "advice": "ORS rehydration. Bland diet. Antibiotics if bacterial.",
+    "icon": "\ud83e\udd22"
+  },
+  "Bronchial Asthma": {
+    "urgency": "High",
+    "advice": "Use inhaler as prescribed. Avoid triggers. Nebulization if severe.",
+    "icon": "\ud83e\udec1"
+  },
+  "Hypertension": {
+    "urgency": "High",
+    "advice": "Low sodium diet. Regular BP monitoring. Antihypertensives.",
+    "icon": "\u2764\ufe0f"
+  },
+  "Migraine": {
+    "urgency": "Medium",
+    "advice": "Rest in dark room. Triptans or OTC pain relief. Track triggers.",
+    "icon": "\ud83e\udde0"
+  },
+  "Cervical spondylosis": {
+    "urgency": "Medium",
+    "advice": "Physiotherapy. Neck exercises. NSAIDs for pain.",
+    "icon": "\ud83e\uddb4"
+  },
+  "Paralysis (brain hemorrhage)": {
+    "urgency": "Critical",
+    "advice": "EMERGENCY \u2014 Call ambulance immediately. Time-critical treatment.",
+    "icon": "\ud83d\udea8"
+  },
+  "Jaundice": {
+    "urgency": "High",
+    "advice": "Liver function tests. Rest. High carb low fat diet.",
+    "icon": "\ud83d\udc9b"
+  },
+  "Malaria": {
+    "urgency": "High",
+    "advice": "Antimalarial drugs (Chloroquine/Artemisinin). Blood smear test.",
+    "icon": "\ud83e\udd9f"
+  },
+  "Chicken pox": {
+    "urgency": "Medium",
+    "advice": "Rest, calamine lotion, antiviral if severe. Avoid scratching.",
+    "icon": "\ud83d\udd34"
+  },
+  "Dengue": {
+    "urgency": "High",
+    "advice": "No aspirin/ibuprofen. Monitor platelet count. IV fluids if severe.",
+    "icon": "\ud83e\udd9f"
+  },
+  "Typhoid": {
+    "urgency": "High",
+    "advice": "Antibiotics (Ciprofloxacin). Boiled water. Rest.",
+    "icon": "\ud83c\udf21\ufe0f"
+  },
+  "Hepatitis A": {
+    "urgency": "High",
+    "advice": "Rest. Avoid alcohol. High calorie diet. Usually self-limiting.",
+    "icon": "\ud83e\udec0"
+  },
+  "Hepatitis B": {
+    "urgency": "High",
+    "advice": "Antiviral therapy. Avoid alcohol. Regular liver monitoring.",
+    "icon": "\ud83e\udec0"
+  },
+  "Hepatitis C": {
+    "urgency": "High",
+    "advice": "Antiviral therapy (DAAs). Specialist referral. No alcohol.",
+    "icon": "\ud83e\udec0"
+  },
+  "Hepatitis D": {
+    "urgency": "High",
+    "advice": "Pegylated interferon. Specialist referral required.",
+    "icon": "\ud83e\udec0"
+  },
+  "Hepatitis E": {
+    "urgency": "High",
+    "advice": "Rest. Supportive care. Avoid alcohol. Usually self-limiting.",
+    "icon": "\ud83e\udec0"
+  },
+  "Alcoholic hepatitis": {
+    "urgency": "High",
+    "advice": "Stop alcohol immediately. Corticosteroids. Nutritional support.",
+    "icon": "\ud83c\udf7a"
+  },
+  "Tuberculosis": {
+    "urgency": "High",
+    "advice": "6-month DOTS therapy. Isolation initially. Chest X-ray.",
+    "icon": "\ud83e\udec1"
+  },
+  "Common Cold": {
+    "urgency": "Low",
+    "advice": "Rest, fluids, vitamin C. OTC decongestants. Usually 7-10 days.",
+    "icon": "\ud83e\udd27"
+  },
+  "Pneumonia": {
+    "urgency": "High",
+    "advice": "Antibiotics. Chest X-ray. Hospitalization if SpO2 < 94%.",
+    "icon": "\ud83e\udec1"
+  },
+  "Dimorphic hemorrhoids(piles)": {
+    "urgency": "Medium",
+    "advice": "High fibre diet. Sitz baths. Surgical if severe.",
+    "icon": "\ud83e\ude7a"
+  },
+  "Heart attack": {
+    "urgency": "Critical",
+    "advice": "EMERGENCY \u2014 Call ambulance. Aspirin 325mg. Do not drive yourself.",
+    "icon": "\ud83d\udea8"
+  },
+  "Varicose veins": {
+    "urgency": "Low",
+    "advice": "Compression stockings. Elevate legs. Surgery if severe.",
+    "icon": "\ud83e\uddb5"
+  },
+  "Hypothyroidism": {
+    "urgency": "Medium",
+    "advice": "Levothyroxine replacement. Regular TSH monitoring.",
+    "icon": "\ud83e\udd8b"
+  },
+  "Hyperthyroidism": {
+    "urgency": "Medium",
+    "advice": "Antithyroid drugs. Beta-blockers for symptoms. Specialist referral.",
+    "icon": "\ud83e\udd8b"
+  },
+  "Hypoglycemia": {
+    "urgency": "High",
+    "advice": "Eat 15g fast sugar immediately. Recheck blood glucose after 15 min.",
+    "icon": "\ud83c\udf6c"
+  },
+  "Osteoarthritis": {
+    "urgency": "Medium",
+    "advice": "Physiotherapy. Weight loss. NSAIDs. Joint replacement if severe.",
+    "icon": "\ud83e\uddb4"
+  },
+  "Arthritis": {
+    "urgency": "Medium",
+    "advice": "Anti-inflammatories. Physiotherapy. DMARDs if rheumatoid.",
+    "icon": "\ud83e\uddb4"
+  },
+  "Vertigo": {
+    "urgency": "Medium",
+    "advice": "Epley maneuver. Vestibular rehab. Antivertigo medication.",
+    "icon": "\ud83c\udf00"
+  },
+  "Acne": {
+    "urgency": "Low",
+    "advice": "Benzoyl peroxide. Retinoids. Avoid touching face. Dermatologist.",
+    "icon": "\ud83d\ude36"
+  },
+  "Urinary tract infection": {
+    "urgency": "Medium",
+    "advice": "Antibiotics. Drink plenty of water. Cranberry juice.",
+    "icon": "\ud83d\udebd"
+  },
+  "Psoriasis": {
+    "urgency": "Low",
+    "advice": "Topical corticosteroids. Moisturizers. Phototherapy. Biologics.",
+    "icon": "\ud83e\ude79"
+  },
+  "Impetigo": {
+    "urgency": "Medium",
+    "advice": "Topical or oral antibiotics. Keep area clean. Avoid contact.",
+    "icon": "\ud83e\ude79"
+  }
+}
